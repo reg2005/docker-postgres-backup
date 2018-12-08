@@ -18,7 +18,7 @@ WEBHOOK_METHOD = os.environ.get("WEBHOOK_METHOD") or "GET"
 KEEP_BACKUP_DAYS = int(os.environ.get("KEEP_BACKUP_DAYS", 7))
 
 dt = datetime.now()
-file_name = DB_NAME + "_" + dt.strftime("%Y-%m-%d")
+file_name = DB_NAME + "_" + dt.strftime("%Y-%m-%d_%I:%M%p")
 backup_file = os.path.join(BACKUP_DIR, file_name)
 
 if not S3_PATH.endswith("/"):
