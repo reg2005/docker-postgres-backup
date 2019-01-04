@@ -1,4 +1,4 @@
-#!/usr/bin/python
+    #!/usr/bin/python
 
 import os
 import subprocess
@@ -91,6 +91,7 @@ def main():
         cmd("curl -X %s %s" % (WEBHOOK_METHOD, WEBHOOK))
     
     log("Backup complete, took %.2f seconds" % (datetime.now() - start_time).total_seconds())
+    sys.exit(0)
 
 
 if __name__ == "__main__":
