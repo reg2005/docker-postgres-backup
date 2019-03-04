@@ -12,6 +12,7 @@ DB_PASS = os.environ["DB_PASS"]
 DB_USER = os.environ["DB_USER"]
 DB_HOST = os.environ["DB_HOST"]
 DB_PORT = os.environ.get("DB_PORT") or 5432
+DB_SSLMODE = os.environ.get("DB_SSLMODE") or "disable"
 MAIL_TO = os.environ.get("MAIL_TO")
 MAIL_FROM = os.environ.get("MAIL_FROM")
 WEBHOOK = os.environ.get("WEBHOOK")
@@ -47,7 +48,7 @@ def take_backup():
     #    sys.exit(1)
     
     # trigger postgres-backup
-    cmd("env PGPASSWORD=%s pg_dump -Fc -h %s -p %s -U %s %s > %s" % (DB_PASS, DB_HOST, DB_PORT, DB_USER, DB_NAME, backup_file))
+    cmd("env PGPASSWORD=%s PGSSLMODE=%s pg_dump -Fc -h %s -p %s -U %s %s > %s" % (DB_PASS, DB_SSLMODE, DB_HOST, DB_PORT, DB_USER, DB_NAME, backup_file))
 
 def upload_backup():
     cmd("aws s3 cp %s %s" % (backup_file, S3_PATH))
