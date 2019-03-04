@@ -13,6 +13,7 @@ Required environment variables
 * :code:`DB_PASS`: Postgres password
 * :code:`DB_USER`: Postgres username
 * :code:`DB_NAME`: Name of database
+* :code:`DB_SSLMODE`: Sslmode of database
 * :code:`S3_PATH`: Amazon S3 path in the format: s3://bucket-name/some/path
 * :code:`AWS_ACCESS_KEY_ID`
 * :code:`AWS_SECRET_ACCESS_KEY`
