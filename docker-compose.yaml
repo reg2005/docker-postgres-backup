@@ -1,0 +1,25 @@
+version: '3'
+services:
+    backup:
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "200k"
+          max-file: "10"
+      image: reg2005/docker-postgres-aws-backup
+      volumes:
+        - .:/backup
+      environment:
+        - CRON_SCHEDULE=${BACKUP_CRON_SCHEDULE}
+        - DB_HOST=${DB_HOST}
+        - DB_PORT=${DB_PORT}
+        - DB_PASS=${DB_PASSWORD}
+        - DB_USER=${DB_USER}
+        - DB_NAME=${DB_DATABASE}
+        - S3_PATH=${BACKUP_S3_PATH}
+        - AWS_ACCESS_KEY_ID=${BACKUP_AWS_ACCESS_KEY_ID}
+        - AWS_SECRET_ACCESS_KEY=${BACKUP_AWS_SECRET_ACCESS_KEY}
+        - AWS_DEFAULT_REGION=${BACKUP_AWS_DEFAULT_REGION}
+        - KEEP_BACKUP_DAYS=7
+        - WEBHOOK=${BACKUP_WEBHOOK}
+
