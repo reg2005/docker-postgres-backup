@@ -11,6 +11,8 @@ DB_NAME = os.environ["DB_NAME"]
 DB_PASS = os.environ["DB_PASS"]
 DB_USER = os.environ["DB_USER"]
 DB_HOST = os.environ["DB_HOST"]
+DB_PORT = os.environ.get("DB_PORT") or 5432
+DB_SSLMODE = os.environ.get("DB_SSLMODE") or "disable"
 
 file_name = sys.argv[1]
 backup_file = os.path.join(BACKUP_DIR, file_name)
@@ -40,11 +42,13 @@ def restore_backup():
         sys.exit(1)
     
     # restore postgres-backup
-    cmd("env PGPASSWORD=%s pg_restore -Fc -h %s -U %s -d %s %s" % (
-        DB_PASS, 
-        DB_HOST, 
-        DB_USER, 
-        DB_NAME, 
+    cmd("env PGPASSWORD=%s SSL=%s pg_restore -Fc -h %s -p %s -U %s -d %s %s" % (
+        DB_PASS,
+        DB_SSLMODE,
+        DB_HOST,
+        DB_PORT,
+        DB_USER,
+        DB_NAME,
         backup_file,
     ))
 
