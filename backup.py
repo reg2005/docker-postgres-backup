@@ -17,7 +17,7 @@ MAIL_TO = os.environ.get("MAIL_TO")
 MAIL_FROM = os.environ.get("MAIL_FROM")
 WEBHOOK = os.environ.get("WEBHOOK")
 WEBHOOK_METHOD = os.environ.get("WEBHOOK_METHOD") or "GET"
-KEEP_BACKUP_DAYS = int(os.environ.get("KEEP_BACKUP_DAYS", 7))
+KEEP_BACKUP_DAYS = int(os.environ.get("KEEP_BACKUP_DAYS", 30))
 
 KEEP_BACKUP_DAYS_IN_AWS = int(os.environ.get("KEEP_BACKUP_DAYS_IN_AMAZON", 15))
 DATE_BACKUP_EXPIRE_AWS = (datetime.utcnow()+timedelta(days=KEEP_BACKUP_DAYS_IN_AWS)).strftime('%Y-%m-%dT%H:%M:%SZ')
