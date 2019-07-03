@@ -15,6 +15,7 @@ Required environment variables
 * :code:`DB_NAME`: Name of database
 * :code:`DB_SSLMODE`: Sslmode of database
 * :code:`S3_PATH`: Amazon S3 path in the format: s3://bucket-name/some/path
+* :code:`KEEP_BACKUP_DAYS_IN_AWS`: How long store backup in aws (default 30 days)
 * :code:`AWS_ACCESS_KEY_ID`
 * :code:`AWS_SECRET_ACCESS_KEY`
 * :code:`AWS_DEFAULT_REGION`
