@@ -3,7 +3,7 @@
 import os
 import subprocess
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 
 BACKUP_DIR = os.environ["BACKUP_DIR"]
 S3_PATH = os.environ["S3_PATH"]
@@ -18,6 +18,9 @@ MAIL_FROM = os.environ.get("MAIL_FROM")
 WEBHOOK = os.environ.get("WEBHOOK")
 WEBHOOK_METHOD = os.environ.get("WEBHOOK_METHOD") or "GET"
 KEEP_BACKUP_DAYS = int(os.environ.get("KEEP_BACKUP_DAYS", 7))
+
+KEEP_BACKUP_DAYS_IN_AWS = int(os.environ.get("KEEP_BACKUP_DAYS_IN_AMAZON", 15))
+DATE_BACKUP_EXPIRE_AWS = (datetime.utcnow()+timedelta(days=KEEP_BACKUP_DAYS_IN_AWS)).strftime('%Y-%m-%dT%H:%M:%SZ')
 
 dt = datetime.now()
 file_name = DB_NAME + "_" + dt.strftime("%Y-%m-%d_%I:%M%p")
@@ -59,7 +62,8 @@ def take_backup():
     ))
 
 def upload_backup():
-    cmd("aws s3 cp %s %s" % (backup_file, S3_PATH))
+    print ("Backup will expired at %s" % DATE_BACKUP_EXPIRE_AWS)
+    cmd("aws s3 cp %s %s --expires %s" % (backup_file, S3_PATH, DATE_BACKUP_EXPIRE_AWS))
     cmd("rm %s" % (backup_file))
 
 def prune_local_backup_files():
