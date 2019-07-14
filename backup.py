@@ -51,7 +51,7 @@ def take_backup():
     #    sys.exit(1)
     
     # trigger postgres-backup
-    cmd("env PGPASSWORD=%s SSL=%s pg_dump -Fc -h %s -p %s -U %s %s > %s" % (
+    cmd("env PGPASSWORD=%s SSL=%s pg_dump -Z4 -Fc -h %s -p %s -U %s %s > %s" % (
         DB_PASS,
         DB_SSLMODE,
         DB_HOST,
