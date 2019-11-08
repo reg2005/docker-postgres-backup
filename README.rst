@@ -18,6 +18,8 @@ Required environment variables
 * :code:`AWS_ACCESS_KEY_ID`
 * :code:`AWS_SECRET_ACCESS_KEY`
 * :code:`AWS_DEFAULT_REGION`
+* :code:`BACKUP_FILENAME_PREFIX`
+* :code:`PG_DUMP_MANUAL_FEATURES--exclude-table-data 'table_name'
 
 Optional environment variables
 ==============================
