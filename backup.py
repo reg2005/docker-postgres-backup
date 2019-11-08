@@ -3,25 +3,30 @@
 import os
 import subprocess
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 
 BACKUP_DIR = os.environ["BACKUP_DIR"]
+BACKUP_FILENAME_PREFIX = os.environ["BACKUP_FILENAME_PREFIX"] or ""
 S3_PATH = os.environ["S3_PATH"]
 DB_NAME = os.environ["DB_NAME"]
 DB_PASS = os.environ["DB_PASS"]
 DB_USER = os.environ["DB_USER"]
 DB_HOST = os.environ["DB_HOST"]
+PG_DUMP_MANUAL_FEATURES = os.environ["PG_DUMP_MANUAL_FEATURES"] or ""
 DB_PORT = os.environ.get("DB_PORT") or 5432
 DB_SSLMODE = os.environ.get("DB_SSLMODE") or "disable"
 MAIL_TO = os.environ.get("MAIL_TO")
 MAIL_FROM = os.environ.get("MAIL_FROM")
 WEBHOOK = os.environ.get("WEBHOOK")
 WEBHOOK_METHOD = os.environ.get("WEBHOOK_METHOD") or "GET"
-KEEP_BACKUP_DAYS = int(os.environ.get("KEEP_BACKUP_DAYS", 7))
+KEEP_BACKUP_DAYS = int(os.environ.get("KEEP_BACKUP_DAYS", 30))
+
+KEEP_BACKUP_DAYS_IN_AWS = int(os.environ.get("KEEP_BACKUP_DAYS_IN_AMAZON", 15))
+DATE_BACKUP_EXPIRE_AWS = (datetime.utcnow()+timedelta(days=KEEP_BACKUP_DAYS_IN_AWS)).strftime('%Y-%m-%dT%H:%M:%SZ')
 
 dt = datetime.now()
 file_name = DB_NAME + "_" + dt.strftime("%Y-%m-%d_%I:%M%p")
-backup_file = os.path.join(BACKUP_DIR, file_name)
+backup_file = os.path.join(BACKUP_DIR, BACKUP_FILENAME_PREFIX + file_name)
 
 if not S3_PATH.endswith("/"):
     S3_PATH = S3_PATH + "/"
@@ -48,18 +53,20 @@ def take_backup():
     #    sys.exit(1)
     
     # trigger postgres-backup
-    cmd("env PGPASSWORD=%s SSL=%s pg_dump -Fc -h %s -p %s -U %s %s > %s" % (
+    cmd("env PGPASSWORD=%s SSL=%s pg_dump -Z4 -Fc -h %s -p %s -U %s %s > %s %s" % (
         DB_PASS,
         DB_SSLMODE,
         DB_HOST,
         DB_PORT,
         DB_USER,
-        DB_NAME, 
-        backup_file
+        DB_NAME,
+        backup_file,
+        PG_DUMP_MANUAL_FEATURES
     ))
 
 def upload_backup():
-    cmd("aws s3 cp %s %s" % (backup_file, S3_PATH))
+    print ("Backup will expired at %s" % DATE_BACKUP_EXPIRE_AWS)
+    cmd("aws s3 cp %s %s --expires %s" % (backup_file, S3_PATH, DATE_BACKUP_EXPIRE_AWS))
     cmd("rm %s" % (backup_file))
 
 def prune_local_backup_files():
