@@ -10,7 +10,10 @@ services:
       volumes:
         - .:/backup
       environment:
+        - BACKUP_DIR=${BACKUP_DIR}
+        - BACKUP_FILENAME_PREFIX=${BACKUP_FILENAME_PREFIX}
         - CRON_SCHEDULE=${BACKUP_CRON_SCHEDULE}
+        - PG_DUMP_MANUAL_FEATURES=${PG_DUMP_MANUAL_FEATURES}
         - DB_HOST=${DB_HOST}
         - DB_PORT=${DB_PORT}
         - DB_SSLMODE=${DB_SSLMODE}
@@ -23,4 +26,3 @@ services:
         - AWS_DEFAULT_REGION=${BACKUP_AWS_DEFAULT_REGION}
         - KEEP_BACKUP_DAYS=7
         - WEBHOOK=${BACKUP_WEBHOOK}
-
