@@ -5,7 +5,7 @@ import subprocess
 import sys
 from datetime import datetime, timedelta
 
-BACKUP_DIR = '/backupsTmp'
+BACKUP_DIR = './backupsTmp'
 S3_PATH = os.environ["S3_PATH"]
 DB_NAMES = os.environ["DB_NAMES"]
 DB_PASS = os.environ["DB_PASS"]
