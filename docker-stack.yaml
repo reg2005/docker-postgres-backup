@@ -6,7 +6,7 @@ services:
         options:
           max-size: "200k"
           max-file: "10"
-      image: reg2005/docker-postgres-aws-backup:10.2
+      image: reg2005/docker-postgres-aws-backup:latest
       environment:
         - CRON_SCHEDULE=0 */2 * * *
         - DB_HOST=
