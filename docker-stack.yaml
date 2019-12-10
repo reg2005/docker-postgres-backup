@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+    backup:
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "200k"
+          max-file: "10"
+      image: reg2005/docker-postgres-aws-backup:10.2
+      environment:
+        - CRON_SCHEDULE=0 */2 * * *
+        - DB_HOST=
+        - DB_PORT=
+        - DB_SSLMODE=
+        - DB_PASS=
+        - DB_USER=
+        - DB_NAMES=
+        - PG_DUMP_MANUAL_FEATURES=
+        - S3_PATH=
+        - AWS_ACCESS_KEY_ID=
+        - AWS_SECRET_ACCESS_KEY=
+        - AWS_DEFAULT_REGION=
+        - KEEP_BACKUP_DAYS=7
+        - WEBHOOK=
+      deploy:
+        replicas: 1
+        placement:
+          constraints: [node.role != manager]
+        resources:
+          limits:
+            cpus: "1"
+            memory: 300M
