@@ -42,7 +42,7 @@ def backup_exists():
     return os.path.exists(backup_file)
 
 def get_backupFile(name):
-    return os.path.join(BACKUP_DIR, name) + "_" + dt.strftime("%Y-%m-%d_%I:%M%p")
+    return os.path.join(BACKUP_DIR, name) + "_" + dt.strftime("%Y-%m-%d_%I-%M%p")
 
 def take_backup(dbName):
     backup_file = get_backupFile(dbName)
@@ -51,7 +51,7 @@ def take_backup(dbName):
     #    sys.exit(1)
     
     # trigger postgres-backup
-    cmd("env PGPASSWORD=%s SSL=%s pg_dump -Z4 -Fc -h %s -p %s -U %s %s > %s %s" % (
+    cmd("env PGPASSWORD=%s SSL=%s pg_dump -h %s -p %s -U %s %s > %s %s" % (
         DB_PASS,
         DB_SSLMODE,
         DB_HOST,
@@ -64,7 +64,7 @@ def take_backup(dbName):
 
 def upload_backup(dbName):
     backup_file = get_backupFile(dbName)
-    cmd("tar -czvf %s %s" % (backup_file + '.tar.gz', backup_file))
+    cmd("tar -cjvf %s %s" % (backup_file + '.tar.gz', backup_file))
     print ("Backup will expired at %s" % DATE_BACKUP_EXPIRE_AWS)
     cmd("aws s3 cp %s %s --expires %s" % (backup_file + '.tar.gz', S3_PATH, DATE_BACKUP_EXPIRE_AWS))
     cmd("rm %s" % (backup_file))
