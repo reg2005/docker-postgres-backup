@@ -9,9 +9,9 @@ services:
       image: reg2005/docker-postgres-aws-backup
       volumes:
         - .:/backup
+        - ./backupsTmp:/backupsTmp
       environment:
         - BACKUP_DIR=${BACKUP_DIR}
-        - BACKUP_FILENAME_PREFIX=${BACKUP_FILENAME_PREFIX}
         - CRON_SCHEDULE=${BACKUP_CRON_SCHEDULE}
         - PG_DUMP_MANUAL_FEATURES=${PG_DUMP_MANUAL_FEATURES}
         - DB_HOST=${DB_HOST}
@@ -19,7 +19,7 @@ services:
         - DB_SSLMODE=${DB_SSLMODE}
         - DB_PASS=${DB_PASSWORD}
         - DB_USER=${DB_USER}
-        - DB_NAME=${DB_DATABASE}
+        - DB_NAMES=${DB_DATABASE}
         - S3_PATH=${BACKUP_S3_PATH}
         - AWS_ACCESS_KEY_ID=${BACKUP_AWS_ACCESS_KEY_ID}
         - AWS_SECRET_ACCESS_KEY=${BACKUP_AWS_SECRET_ACCESS_KEY}
