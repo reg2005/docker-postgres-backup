@@ -64,9 +64,8 @@ def take_backup(dbName):
 
 def upload_backup(dbName):
     backup_file = get_backupFile(dbName)
-    cmd("tar -cjvf %s %s" % (backup_file + '.tar.gz', backup_file))
     print ("Backup will expired at %s" % DATE_BACKUP_EXPIRE_AWS)
-    cmd("aws s3 cp %s %s --expires %s" % (backup_file + '.tar.gz', S3_PATH, DATE_BACKUP_EXPIRE_AWS))
+    cmd("aws s3 cp %s %s --expires %s" % (backup_file, S3_PATH, DATE_BACKUP_EXPIRE_AWS))
     cmd("rm %s" % (backup_file))
 
 def prune_local_backup_files():
